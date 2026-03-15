@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RiskHarbor — Cyber Risk Assessment</title>
+<meta name="description" content="Free cybersecurity risk assessment for small businesses. Get an instant AI-powered report in minutes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy: #0a1628;
+  --navy-mid: #0f2040;
+  --navy-card: #122035;
+  --navy-border: #1e3a5f;
+  --blue-primary: #1e6fc4;
+  --blue-light: #2e8de8;
+  --blue-bright: #4aa8ff;
+  --blue-glow: rgba(46,141,232,0.15);
+  --text-primary: #e8f2ff;
+  --text-secondary: #7a9fc0;
+  --text-muted: #4a6a88;
+  --success: #00c47a;
+  --warning: #f0a500;
+  --danger: #e84040;
+  --critical: #ff2828;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--navy);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── BACKGROUND ── */
+.bg-grid {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(30,111,196,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30,111,196,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.bg-glow {
+  position: fixed; top: -200px; left: 50%; transform: translateX(-50%);
+  width: 800px; height: 500px; border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(30,111,196,0.12) 0%, transparent 70%);
+  z-index: 0; pointer-events: none;
+}
+
+/* ── LAYOUT ── */
+.wrap { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; padding: 0 20px; }
+
+/* ── NAV ── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10,22,40,0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--navy-border);
+  padding: 14px 0;
+}
+.nav-inner {
+  max-width: 780px; margin: 0 auto; padding: 0 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.nav-shield {
+  width: 32px; height: 32px;
+}
+.nav-brand { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 700; color: var(--text-primary); }
+.nav-sub { font-size: 11px; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; margin-left: 2px; }
+.nav-badge {
+  margin-left: auto;
+  font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+  background: rgba(0,196,122,0.1); border: 1px solid rgba(0,196,122,0.25);
+  color: var(--success); padding: 4px 12px; border-radius: 20px;
+}
+
+/* ── HERO ── */
+.hero { padding: 56px 0 40px; text-align: center; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--blue-bright); margin-bottom: 20px;
+  background: rgba(74,168,255,0.08); border: 1px solid rgba(74,168,255,0.2);
+  padding: 6px 16px; border-radius: 20px;
+}
+.hero-eyebrow::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--blue-bright); animation: blink 2s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:0.3} 50%{opacity:1} }
+.hero h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(28px, 5vw, 42px); font-weight: 700;
+  color: var(--text-primary); line-height: 1.2; margin-bottom: 16px;
+}
+.hero h1 span { color: var(--blue-bright); }
+.hero p { font-size: 16px; color: var(--text-secondary); max-width: 520px; margin: 0 auto 32px; line-height: 1.7; }
+.hero-stats {
+  display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+.hero-stat { text-align: center; }
+.hero-stat-num { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; color: var(--blue-bright); }
+.hero-stat-lbl { font-size: 12px; color: var(--text-muted); }
+
+/* ── STEP INDICATOR ── */
+.steps-bar {
+  display: flex; align-items: center; margin-bottom: 32px;
+}
+.step-item { display: flex; align-items: center; gap: 8px; flex: 1; }
+.step-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600; flex-shrink: 0;
+  border: 1.5px solid var(--navy-border);
+  color: var(--text-muted); background: var(--navy-card);
+  transition: all 0.3s;
+}
+.step-num.active { border-color: var(--blue-primary); color: var(--blue-bright); background: rgba(30,111,196,0.15); }
+.step-num.done { border-color: var(--success); color: var(--success); background: rgba(0,196,122,0.1); }
+.step-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+.step-label.active { color: var(--blue-bright); }
+.step-connector { flex: 1; height: 1px; background: var(--navy-border); margin: 0 8px; }
+
+/* ── CARD ── */
+.card {
+  background: var(--navy-card);
+  border: 1px solid var(--navy-border);
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  margin-bottom: 16px;
+}
+.card-header {
+  display: flex; align-items: center; gap: 14px; margin-bottom: 24px;
+  padding-bottom: 16px; border-bottom: 1px solid rgba(30,58,95,0.6);
+}
+.card-icon {
+  width: 40px; height: 40px; border-radius: var(--radius-sm);
+  background: rgba(30,111,196,0.12); border: 1px solid rgba(30,111,196,0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.card-title { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 600; color: var(--text-primary); }
+.card-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+/* ── FORM FIELDS ── */
+.field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.field-grid.single { grid-template-columns: 1fr; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 12px; font-weight: 500; color: var(--text-secondary); letter-spacing: 0.5px; text-transform: uppercase; }
+.field input, .field select {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--navy-border);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  font-size: 14px; color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  outline: none; transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+.field input::placeholder { color: var(--text-muted); }
+.field input:focus, .field select:focus { border-color: var(--blue-primary); }
+.field select option { background: var(--navy-mid); color: var(--text-primary); }
+
+/* ── PROGRESS ── */
+.progress-wrap { margin-bottom: 24px; }
+.progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+.progress-track { height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--blue-primary), var(--blue-bright)); border-radius: 2px; transition: width 0.4s ease; }
+
+/* ── QUESTIONS ── */
+.q-wrap { margin-bottom: 20px; }
+.q-text { font-size: 13px; color: var(--text-secondary); margin-bottom: 10px; line-height: 1.5; }
+.q-num { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; }
+.opts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.opt {
+  padding: 10px 14px; border-radius: var(--radius-sm);
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(255,255,255,0.02);
+  cursor: pointer; font-family: 'Inter', sans-serif;
+  font-size: 13px; color: var(--text-muted); text-align: left;
+  transition: all 0.18s; line-height: 1.4; user-select: none;
+}
+.opt:hover { border-color: rgba(30,111,196,0.4); color: var(--text-secondary); background: rgba(30,111,196,0.05); }
+.opt.sel-good { border-color: rgba(0,196,122,0.45); background: rgba(0,196,122,0.07); color: var(--success); }
+.opt.sel-ok   { border-color: rgba(240,165,0,0.45); background: rgba(240,165,0,0.07); color: var(--warning); }
+.opt.sel-bad  { border-color: rgba(232,64,64,0.45); background: rgba(232,64,64,0.07); color: var(--danger); }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 13px 32px; border-radius: var(--radius-sm);
+  font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; border: none; text-decoration: none;
+}
+.btn-primary {
+  background: var(--blue-primary); color: #fff;
+}
+.btn-primary:hover { background: var(--blue-light); transform: translateY(-1px); }
+.btn-primary:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+.btn-ghost {
+  background: transparent; color: var(--text-secondary);
+  border: 1px solid var(--navy-border);
+}
+.btn-ghost:hover { border-color: rgba(30,111,196,0.4); color: var(--text-primary); }
+.btn-success {
+  background: rgba(0,196,122,0.12); color: var(--success);
+  border: 1px solid rgba(0,196,122,0.3);
+}
+.btn-success:hover { background: rgba(0,196,122,0.2); }
+.btn-lg { padding: 15px 40px; font-size: 15px; width: 100%; }
+.btn-row { display: flex; gap: 12px; margin-top: 24px; }
+
+/* ── SCAN ANIM ── */
+#screen-scan {
+  display: none; text-align: center; padding: 72px 0;
+}
+.scan-visual { position: relative; width: 100px; height: 100px; margin: 0 auto 32px; }
+.scan-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 2px solid rgba(30,111,196,0.15);
+  border-top-color: var(--blue-primary);
+  animation: spin 1.2s linear infinite;
+}
+.scan-ring-2 {
+  position: absolute; inset: 12px; border-radius: 50%;
+  border: 1.5px solid rgba(74,168,255,0.1);
+  border-top-color: var(--blue-bright);
+  animation: spin 1.8s linear infinite reverse;
+}
+.scan-shield {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 28px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.scan-msg { font-size: 13px; color: var(--blue-bright); letter-spacing: 1px; font-weight: 500; }
+.scan-sub { font-size: 12px; color: var(--text-muted); margin-top: 8px; }
+
+/* ── RESULTS ── */
+#screen-results { display: none; }
+
+.risk-hero {
+  border-radius: var(--radius); padding: 28px 32px; margin-bottom: 20px;
+  text-align: center; border: 1px solid;
+}
+.risk-hero.critical { border-color: rgba(255,40,40,0.3); background: rgba(255,40,40,0.05); }
+.risk-hero.high     { border-color: rgba(232,100,0,0.3); background: rgba(232,100,0,0.05); }
+.risk-hero.medium   { border-color: rgba(240,165,0,0.3); background: rgba(240,165,0,0.05); }
+.risk-hero.low      { border-color: rgba(0,196,122,0.3); background: rgba(0,196,122,0.05); }
+.risk-biz-name { font-size: 12px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+.risk-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 6px; font-weight: 600; }
+.risk-label.critical { color: var(--critical); }
+.risk-label.high { color: #e86400; }
+.risk-label.medium { color: var(--warning); }
+.risk-label.low { color: var(--success); }
+.risk-num { font-family: 'Space Grotesk', sans-serif; font-size: 64px; font-weight: 700; line-height: 1; margin-bottom: 6px; }
+.risk-num.critical { color: var(--critical); }
+.risk-num.high { color: #e86400; }
+.risk-num.medium { color: var(--warning); }
+.risk-num.low { color: var(--success); }
+.risk-desc { font-size: 14px; color: var(--text-muted); }
+
+/* Category grid */
+.cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+.cat-card {
+  background: var(--navy-card); border: 1px solid var(--navy-border);
+  border-radius: var(--radius-sm); padding: 14px 16px;
+}
+.cat-name { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; font-weight: 500; margin-bottom: 10px; }
+.cat-track { height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; margin-bottom: 8px; }
+.cat-fill { height: 100%; border-radius: 2px; transition: width 1s ease; }
+.cat-row { display: flex; justify-content: space-between; align-items: baseline; }
+.cat-score { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; }
+.cat-status { font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+
+/* AI section */
+.ai-card {
+  background: rgba(30,111,196,0.04);
+  border: 1px solid rgba(30,111,196,0.18);
+  border-radius: var(--radius); padding: 24px 28px; margin-bottom: 16px;
+}
+.ai-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.ai-pill {
+  font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600;
+  padding: 3px 10px; border-radius: 20px;
+  background: rgba(74,168,255,0.1); border: 1px solid rgba(74,168,255,0.2); color: var(--blue-bright);
+}
+.ai-title { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 600; color: var(--text-primary); }
+.ai-body { font-size: 14px; color: var(--text-secondary); line-height: 1.75; }
+.ai-body p { margin-bottom: 12px; }
+.ai-body p:last-child { margin-bottom: 0; }
+.ai-loading { font-size: 13px; color: var(--blue-bright); animation: blink 1.5s ease-in-out infinite; }
+
+/* Recs */
+.rec { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid rgba(30,58,95,0.5); }
+.rec:last-child { border-bottom: none; }
+.rec-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+.rec-dot.CRITICAL { background: var(--critical); }
+.rec-dot.HIGH { background: #e86400; }
+.rec-dot.MEDIUM { background: var(--warning); }
+.rec-pri { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 3px; }
+.rec-pri.CRITICAL { color: var(--critical); }
+.rec-pri.HIGH { color: #e86400; }
+.rec-pri.MEDIUM { color: var(--warning); }
+.rec-text { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+/* Email gate */
+.email-gate {
+  background: linear-gradient(135deg, rgba(30,111,196,0.08), rgba(74,168,255,0.04));
+  border: 1px solid rgba(30,111,196,0.25); border-radius: var(--radius);
+  padding: 28px 32px; margin-bottom: 16px; text-align: center;
+}
+.email-gate h3 { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+.email-gate p { font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; }
+.email-row { display: flex; gap: 10px; max-width: 460px; margin: 0 auto; }
+.email-row input {
+  flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--navy-border);
+  border-radius: var(--radius-sm); padding: 12px 16px;
+  font-size: 14px; color: var(--text-primary); outline: none; font-family: 'Inter', sans-serif;
+  transition: border-color 0.2s;
+}
+.email-row input:focus { border-color: var(--blue-primary); }
+.email-row input::placeholder { color: var(--text-muted); }
+.email-note { font-size: 11px; color: var(--text-muted); margin-top: 10px; }
+
+/* Bottom actions */
+.actions-row { display: flex; gap: 10px; margin-top: 8px; }
+.actions-row .btn { flex: 1; }
+
+/* Screens */
+#screen-intro, #screen-biz, #screen-assess { }
+
+/* FOOTER */
+footer {
+  text-align: center; padding: 32px 20px;
+  font-size: 12px; color: var(--text-muted);
+  border-top: 1px solid rgba(30,58,95,0.4); margin-top: 48px;
+}
+footer a { color: var(--text-muted); text-decoration: none; }
+footer a:hover { color: var(--text-secondary); }
+
+/* RESPONSIVE */
+@media (max-width: 580px) {
+  .card { padding: 20px; }
+  .field-grid { grid-template-columns: 1fr; }
+  .cat-grid { grid-template-columns: 1fr; }
+  .opts { grid-template-columns: 1fr; }
+  .email-row { flex-direction: column; }
+  .actions-row { flex-direction: column; }
+  .hero h1 { font-size: 26px; }
+  .hero-stats { gap: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <svg class="nav-shield" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 8L12 22V50C12 70 29 86 50 94C71 86 88 70 88 50V22L50 8Z" fill="url(#sg)" stroke="rgba(74,168,255,0.3)" stroke-width="1.5"/>
+      <path d="M32 50L44 62L68 38" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <defs>
+        <linearGradient id="sg" x1="12" y1="8" x2="88" y2="94" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#1e6fc4"/>
+          <stop offset="100%" stop-color="#0a3d7a"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <div>
+      <div class="nav-brand">RiskHarbor</div>
+      <div class="nav-sub">Cyber Risk Assessment</div>
+    </div>
+    <div class="nav-badge">Free Assessment</div>
+  </div>
+</nav>
+
+<!-- WRAP -->
+<div class="wrap">
+
+<!-- ════ SCREEN: INTRO ════ -->
+<div id="screen-intro">
+  <div class="hero">
+    <div class="hero-eyebrow">AI-Powered Security Analysis</div>
+    <h1>Is Your Business a <span>Cyber Target?</span></h1>
+    <p>Answer 24 questions and get an instant AI-generated risk report with actionable recommendations — tailored to your business.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-num">8</div><div class="hero-stat-lbl">Risk Categories</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">24</div><div class="hero-stat-lbl">Questions</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">~5 min</div><div class="hero-stat-lbl">To Complete</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">Free</div><div class="hero-stat-lbl">Always</div></div>
+    </div>
+    <button class="btn btn-primary btn-lg" onclick="goTo('biz')" style="max-width:320px;margin:0 auto">
+      Start Free Assessment →
+    </button>
+  </div>
+
+  <!-- trust strip -->
+  <div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-bottom:48px;margin-top:8px;">
+    <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted)">
+      <span style="color:var(--success)">✓</span> No account required
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted)">
+      <span style="color:var(--success)">✓</span> Instant AI report
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted)">
+      <span style="color:var(--success)">✓</span> PDF export included
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted)">
+      <span style="color:var(--success)">✓</span> No data sold or shared
+    </div>
+  </div>
+</div>
+
+<!-- ════ SCREEN: BIZ INFO ════ -->
+<div id="screen-biz" style="display:none;padding-top:40px;">
+  <div class="steps-bar" id="steps-bar"></div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">🏢</div>
+      <div>
+        <div class="card-title">Business Information</div>
+        <div class="card-subtitle">Tell us about your organization so we can tailor your report</div>
+      </div>
+    </div>
+
+    <div class="field-grid">
+      <div class="field" style="grid-column:1/-1">
+        <label>Business Name *</label>
+        <input type="text" id="biz-name" placeholder="Acme Corp" oninput="validateBiz()">
+      </div>
+      <div class="field">
+        <label>Industry *</label>
+        <select id="biz-industry" onchange="validateBiz()">
+          <option value="">Select industry...</option>
+          <option>Accounting & Finance</option>
+          <option>Construction & Trades</option>
+          <option>Consulting & Professional Services</option>
+          <option>E-commerce & Retail</option>
+          <option>Education</option>
+          <option>Food & Hospitality</option>
+          <option>Healthcare & Medical</option>
+          <option>Insurance</option>
+          <option>Legal Services</option>
+          <option>Manufacturing</option>
+          <option>Marketing & Creative</option>
+          <option>Non-Profit</option>
+          <option>Real Estate</option>
+          <option>Technology & Software</option>
+          <option>Transportation & Logistics</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Company Size *</label>
+        <select id="biz-size" onchange="validateBiz()">
+          <option value="">Select size...</option>
+          <option value="1-5">1–5 employees</option>
+          <option value="6-20">6–20 employees</option>
+          <option value="21-50">21–50 employees</option>
+          <option value="51-100">51–100 employees</option>
+          <option value="100+">100+ employees</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Your Name *</label>
+        <input type="text" id="biz-contact" placeholder="Jane Smith" oninput="validateBiz()">
+      </div>
+      <div class="field">
+        <label>Your Role</label>
+        <input type="text" id="biz-role" placeholder="Owner / IT Manager / etc.">
+      </div>
+      <div class="field" style="grid-column:1/-1">
+        <label>Email Address * <span style="font-size:10px;color:var(--text-muted);text-transform:none;letter-spacing:0">(your report will be sent here)</span></label>
+        <input type="email" id="biz-email" placeholder="jane@acmecorp.com" oninput="validateBiz()">
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="goTo('intro')">← Back</button>
+      <button class="btn btn-primary" id="btn-biz-next" disabled onclick="goTo('assess')" style="flex:1">
+        Continue to Assessment →
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SCREEN: ASSESSMENT ════ -->
+<div id="screen-assess" style="display:none;padding-top:40px;">
+  <div class="steps-bar" id="steps-bar-2"></div>
+  <div class="progress-wrap">
+    <div class="progress-meta">
+      <span id="prog-label">0 / 24 answered</span>
+      <span id="prog-pct">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+  <div id="q-container"></div>
+  <div style="text-align:center;margin-top:8px;">
+    <button class="btn btn-primary btn-lg" id="btn-run" disabled onclick="runScan()" style="max-width:360px;margin:0 auto">
+      🔍 Run Risk Scan
+    </button>
+    <div id="run-hint" style="font-size:12px;color:var(--text-muted);margin-top:10px;">Answer all 24 questions to run your scan</div>
+  </div>
+</div>
+
+<!-- ════ SCREEN: SCANNING ════ -->
+<div id="screen-scan" style="padding-top:48px;">
+  <div class="scan-visual">
+    <div class="scan-ring"></div>
+    <div class="scan-ring-2"></div>
+    <div class="scan-shield">🛡️</div>
+  </div>
+  <div class="scan-msg" id="scan-msg">Initializing threat analysis...</div>
+  <div class="scan-sub">This will only take a moment</div>
+</div>
+
+<!-- ════ SCREEN: RESULTS ════ -->
+<div id="screen-results" style="padding-top:32px;">
+  <div id="results-inner"></div>
+</div>
+
+</div><!-- /wrap -->
+
+<footer>
+  <p style="margin-bottom:6px">
+    <strong style="color:var(--text-secondary)">RiskHarbor</strong> is powered by
+    <a href="https://orcannus.com" target="_blank">Orcannus Technologies</a>
+  </p>
+  <p>© 2025 Orcannus Technologies. For informational purposes only. Not a substitute for professional cybersecurity assessment.</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+
+/* ════ DATA ════ */
+const SECTIONS = [
+  { cat:"Network & Infrastructure", icon:"🌐", qs:[
+    { id:"n1", t:"Does your business use a firewall?", opts:[{l:"Yes — hardware + software firewall",s:0},{l:"Software firewall only",s:1},{l:"Not sure",s:2},{l:"No firewall",s:3}] },
+    { id:"n2", t:"How often is networking equipment firmware updated?", opts:[{l:"Automatically / at least monthly",s:0},{l:"Every few months",s:1},{l:"Rarely updated",s:2},{l:"Never / unknown",s:3}] },
+    { id:"n3", t:"Is guest Wi-Fi separated from the business network?", opts:[{l:"Yes — fully isolated VLAN",s:0},{l:"Separate SSID, same router",s:1},{l:"No separation",s:2},{l:"No Wi-Fi / N/A",s:0}] },
+  ]},
+  { cat:"Access Control", icon:"🔐", qs:[
+    { id:"a1", t:"Do employees use unique passwords for business accounts?", opts:[{l:"Yes + enforced via password manager",s:0},{l:"Mostly unique passwords",s:1},{l:"Some shared passwords",s:2},{l:"No policy in place",s:3}] },
+    { id:"a2", t:"Is multi-factor authentication (MFA) enabled on critical systems?", opts:[{l:"Yes — on all systems",s:0},{l:"On key systems only",s:1},{l:"Email accounts only",s:2},{l:"No MFA anywhere",s:3}] },
+    { id:"a3", t:"When an employee leaves, how quickly are their accounts disabled?", opts:[{l:"Same day — immediate offboarding",s:0},{l:"Within a week",s:1},{l:"Eventually gets around to it",s:2},{l:"No formal process",s:3}] },
+  ]},
+  { cat:"Data Backup & Recovery", icon:"💾", qs:[
+    { id:"d1", t:"How frequently is critical business data backed up?", opts:[{l:"Daily automated backups",s:0},{l:"Weekly backups",s:1},{l:"Monthly or less frequent",s:2},{l:"No backups",s:3}] },
+    { id:"d2", t:"Are backups stored offsite or in the cloud?", opts:[{l:"Cloud + separate local copy",s:0},{l:"Cloud only",s:0},{l:"Local only (same location)",s:2},{l:"No backups exist",s:3}] },
+    { id:"d3", t:"Has your backup recovery process been tested?", opts:[{l:"Yes — tested within past year",s:0},{l:"Tested more than a year ago",s:1},{l:"Never been tested",s:2},{l:"No backups to test",s:3}] },
+  ]},
+  { cat:"Employee Awareness", icon:"👥", qs:[
+    { id:"e1", t:"Do employees receive cybersecurity training?", opts:[{l:"Regular formal training (quarterly+)",s:0},{l:"Annual training",s:1},{l:"Informal tips only",s:2},{l:"No training at all",s:3}] },
+    { id:"e2", t:"How confident are you employees can spot a phishing email?", opts:[{l:"Very confident",s:0},{l:"Somewhat confident",s:1},{l:"Not very confident",s:2},{l:"Not confident at all",s:3}] },
+    { id:"e3", t:"Is there a process for reporting suspicious activity?", opts:[{l:"Yes — clear documented process",s:0},{l:"Informal 'tell the boss'",s:1},{l:"No process exists",s:2},{l:"Employees don't know what to report",s:3}] },
+  ]},
+  { cat:"Software & Patching", icon:"⚙️", qs:[
+    { id:"s1", t:"Are operating systems kept updated with security patches?", opts:[{l:"Auto-updates enabled everywhere",s:0},{l:"Manual updates done promptly",s:1},{l:"Updated occasionally",s:2},{l:"Rarely or never updated",s:3}] },
+    { id:"s2", t:"Is endpoint protection (antivirus/EDR) on all devices?", opts:[{l:"Yes — centrally managed solution",s:0},{l:"Installed on most devices",s:1},{l:"On some devices only",s:2},{l:"No endpoint protection",s:3}] },
+    { id:"s3", t:"Are unused software and apps regularly removed?", opts:[{l:"Regular audits and cleanup",s:0},{l:"Cleaned occasionally",s:1},{l:"Rarely done",s:2},{l:"Never cleaned up",s:3}] },
+  ]},
+  { cat:"Incident Response", icon:"🚨", qs:[
+    { id:"i1", t:"Does your business have a written incident response plan?", opts:[{l:"Yes — documented and practiced",s:0},{l:"Basic written plan exists",s:1},{l:"Informal understanding only",s:2},{l:"No plan exists",s:3}] },
+    { id:"i2", t:"Do you have cyber liability insurance?", opts:[{l:"Yes — comprehensive coverage",s:0},{l:"Basic coverage",s:1},{l:"Not sure / checking",s:2},{l:"No cyber insurance",s:3}] },
+    { id:"i3", t:"Has your business experienced a security incident in the past 2 years?", opts:[{l:"No incidents",s:0},{l:"Minor incident, fully resolved",s:1},{l:"Significant incident occurred",s:2},{l:"Multiple incidents",s:3}] },
+  ]},
+  { cat:"Physical Security", icon:"🏠", qs:[
+    { id:"p1", t:"Are servers and network equipment physically secured?", opts:[{l:"Locked server room / cabinet",s:0},{l:"Restricted access area",s:1},{l:"In open office area",s:2},{l:"No physical controls",s:3}] },
+    { id:"p2", t:"Do employees lock screens when stepping away?", opts:[{l:"Auto-lock enforced by policy",s:0},{l:"Policy exists, mostly followed",s:1},{l:"Inconsistent compliance",s:2},{l:"No screen-lock policy",s:3}] },
+    { id:"p3", t:"Is visitor access to offices and server areas controlled?", opts:[{l:"Sign-in + escort required",s:0},{l:"Sign-in only",s:1},{l:"Informal controls",s:2},{l:"No controls",s:3}] },
+  ]},
+  { cat:"Compliance & Policy", icon:"📋", qs:[
+    { id:"c1", t:"Does your business handle sensitive data (health, financial, PII)?", opts:[{l:"Yes — compliant controls in place",s:0},{l:"Yes — basic controls only",s:1},{l:"Yes — minimal controls",s:2},{l:"Yes — no controls",s:3}] },
+    { id:"c2", t:"Is there a written acceptable use policy for company devices?", opts:[{l:"Yes — signed by all staff",s:0},{l:"Written but informally enforced",s:1},{l:"Verbal agreement only",s:2},{l:"No policy",s:3}] },
+    { id:"c3", t:"Are third-party vendor security practices reviewed?", opts:[{l:"Yes — regular security reviews",s:0},{l:"Reviewed at onboarding",s:1},{l:"Rarely checked",s:2},{l:"Never reviewed",s:3}] },
+  ]},
+];
+
+let answers = {};
+let bizInfo = {};
+let aiAnalysis = '';
+let aiRecs = [];
+let lastScores = null;
+const TOTAL_Q = 24;
+
+/* ════ NAVIGATION ════ */
+const screens = ['intro','biz','assess','scan','results'];
+function goTo(id) {
+  screens.forEach(s => {
+    const el = document.getElementById('screen-'+s);
+    if (el) el.style.display = s===id ? 'block' : 'none';
+  });
+  if (id === 'biz') renderSteps('biz');
+  if (id === 'assess') { renderSteps('assess'); renderQuestions(); }
+  if (id === 'scan') startScan();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ════ STEPS ════ */
+function renderSteps(active) {
+  const ids = ['steps-bar','steps-bar-2'];
+  ids.forEach(sid => {
+    const el = document.getElementById(sid);
+    if (!el) return;
+    const steps = [
+      {label:'Business Info',key:'biz'},
+      {label:'Assessment',key:'assess'},
+      {label:'Your Report',key:'results'},
+    ];
+    el.innerHTML = steps.map((s,i) => {
+      const isDone = (active==='assess'&&s.key==='biz') || (active==='results'&&s.key!=='results');
+      const isActive = s.key===active;
+      return `
+        ${i>0?'<div class="step-connector"></div>':''}
+        <div class="step-item">
+          <div class="step-num ${isDone?'done':isActive?'active':''}">${isDone?'✓':i+1}</div>
+          <div class="step-label ${isActive?'active':''}">${s.label}</div>
+        </div>`;
+    }).join('');
+  });
+}
+
+/* ════ BIZ VALIDATION ════ */
+function validateBiz() {
+  const name  = document.getElementById('biz-name').value.trim();
+  const ind   = document.getElementById('biz-industry').value;
+  const size  = document.getElementById('biz-size').value;
+  const email = document.getElementById('biz-email').value.trim();
+  const contact = document.getElementById('biz-contact').value.trim();
+  const ok = name && ind && size && email && contact && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
+  document.getElementById('btn-biz-next').disabled = !ok;
+  if (ok) {
+    bizInfo = {
+      name, industry: ind, size,
+      contact, role: document.getElementById('biz-role').value.trim(),
+      email
+    };
+  }
+}
+
+/* ════ QUESTIONS ════ */
+function renderQuestions() {
+  const c = document.getElementById('q-container');
+  c.innerHTML = '';
+  SECTIONS.forEach(sec => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `<div class="card-header">
+      <div class="card-icon">${sec.icon}</div>
+      <div><div class="card-title">${sec.cat}</div></div>
+    </div>`;
+    sec.qs.forEach((q, qi) => {
+      const qw = document.createElement('div');
+      qw.className = 'q-wrap';
+      qw.innerHTML = `<div class="q-num">${sec.cat} · Q${qi+1}</div><div class="q-text">${q.t}</div><div class="opts" id="opts-${q.id}"></div>`;
+      card.appendChild(qw);
+      q.opts.forEach((opt, oi) => {
+        const btn = document.createElement('button');
+        btn.className = 'opt';
+        btn.textContent = opt.l;
+        btn.onclick = () => selectOpt(q.id, oi, opt.s, sec.cat);
+        qw.querySelector('.opts').appendChild(btn);
+      });
+    });
+    c.appendChild(card);
+  });
+  updateProgress();
+}
+
+function selectOpt(qid, idx, score, cat) {
+  answers[qid] = { score, cat };
+  const opts = document.getElementById('opts-'+qid).querySelectorAll('.opt');
+  opts.forEach((o,i) => {
+    o.className = 'opt';
+    if (i===idx) o.className = score===0?'opt sel-good':score===1?'opt sel-ok':'opt sel-bad';
+  });
+  updateProgress();
+}
+
+function updateProgress() {
+  const done = Object.keys(answers).length;
+  const pct = Math.round((done/TOTAL_Q)*100);
+  document.getElementById('prog-label').textContent = `${done} / ${TOTAL_Q} answered`;
+  document.getElementById('prog-pct').textContent = `${pct}%`;
+  document.getElementById('prog-fill').style.width = pct+'%';
+  const btn = document.getElementById('btn-run');
+  const hint = document.getElementById('run-hint');
+  if (done === TOTAL_Q) {
+    btn.disabled = false;
+    hint.textContent = 'All questions answered — ready to generate your report';
+    hint.style.color = 'var(--success)';
+  } else {
+    btn.disabled = true;
+    hint.textContent = `${TOTAL_Q-done} question${TOTAL_Q-done===1?'':'s'} remaining`;
+    hint.style.color = 'var(--text-muted)';
+  }
+}
+
+/* ════ SCAN ════ */
+const SCAN_MSGS = [
+  'Initializing threat analysis...',
+  'Mapping attack surface...',
+  'Evaluating control gaps...',
+  'Scoring risk vectors...',
+  'Generating AI threat report...',
+  'Building your personalized report...',
+];
+
+function runScan() {
+  goTo('scan');
+  let i = 0;
+  const iv = setInterval(() => {
+    if (i < SCAN_MSGS.length) document.getElementById('scan-msg').textContent = SCAN_MSGS[i++];
+  }, 700);
+  setTimeout(() => { clearInterval(iv); buildResults(); }, 4500);
+}
+
+function startScan() {}
+
+/* ════ SCORING ════ */
+function calcScores() {
+  const cats = {};
+  SECTIONS.forEach(s => { cats[s.cat] = { total:0, max: s.qs.length*3 }; });
+  Object.values(answers).forEach(a => { cats[a.cat].total += a.score; });
+  const catScores = {};
+  Object.entries(cats).forEach(([cat,v]) => {
+    catScores[cat] = Math.round((v.total/v.max)*100);
+  });
+  const overall = Math.round(Object.values(catScores).reduce((a,b)=>a+b,0)/Object.keys(catScores).length);
+  return { catScores, overall };
+}
+
+function riskInfo(score) {
+  if (score >= 70) return { label:'CRITICAL', cls:'critical', color:'var(--critical)', desc:'Your business has severe security gaps that require immediate action.' };
+  if (score >= 45) return { label:'HIGH', cls:'high', color:'#e86400', desc:'Significant vulnerabilities exist that could expose your business to attack.' };
+  if (score >= 20) return { label:'MEDIUM', cls:'medium', color:'var(--warning)', desc:'Some risks are present. Targeted improvements will significantly reduce your exposure.' };
+  return { label:'LOW', cls:'low', color:'var(--success)', desc:'Good security posture. Continue maintaining and improving your defenses.' };
+}
+
+function catInfo(score) {
+  if (score >= 70) return { color:'var(--critical)', status:'Critical' };
+  if (score >= 45) return { color:'#e86400', status:'High Risk' };
+  if (score >= 20) return { color:'var(--warning)', status:'Medium' };
+  return { color:'var(--success)', status:'Low Risk' };
+}
+
+/* ════ RESULTS ════ */
+async function buildResults() {
+  const { catScores, overall } = calcScores();
+  lastScores = { catScores, overall };
+  const risk = riskInfo(overall);
+  const date = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+
+  const ri = document.getElementById('results-inner');
+  ri.innerHTML = `
+    <div class="risk-hero ${risk.cls}">
+      <div class="risk-biz-name">${bizInfo.name} · ${bizInfo.industry} · ${bizInfo.size} employees</div>
+      <div class="risk-label ${risk.cls}">Overall Risk Level</div>
+      <div class="risk-num ${risk.cls}">${overall}</div>
+      <div class="risk-desc">${risk.label} EXPOSURE — ${risk.desc}</div>
+    </div>
+
+    <div class="cat-grid" id="cat-grid"></div>
+
+    <div class="ai-card">
+      <div class="ai-header">
+        <div class="ai-pill">AI Analysis</div>
+        <div class="ai-title">Threat Intelligence Report</div>
+      </div>
+      <div class="ai-body" id="ai-body">
+        <div class="ai-loading">Generating your personalized threat analysis...</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">⚡</div>
+        <div><div class="card-title">Priority Action Plan</div><div class="card-subtitle">AI-generated recommendations based on your answers</div></div>
+      </div>
+      <div id="recs-list"><div style="font-size:13px;color:var(--text-muted);padding:12px 0">Loading recommendations...</div></div>
+    </div>
+
+    <div class="email-gate">
+      <h3>Get Your Full PDF Report</h3>
+      <p>Your complete risk report with all findings, scores, and recommendations — sent to your inbox.</p>
+      <div class="email-row">
+        <input type="email" id="gate-email" value="${bizInfo.email}" placeholder="your@email.com">
+        <button class="btn btn-primary" onclick="downloadPDF()">Send Report</button>
+      </div>
+      <div class="email-note">By submitting you agree to receive your report and occasional security tips from RiskHarbor. Unsubscribe anytime.</div>
+    </div>
+
+    <div class="actions-row">
+      <button class="btn btn-success" onclick="downloadPDF()">⬇ Download PDF Report</button>
+      <button class="btn btn-ghost" onclick="location.reload()">↺ New Assessment</button>
+    </div>
+
+    <p style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:16px">
+      Report generated ${date} for ${bizInfo.contact} at ${bizInfo.name}
+    </p>
+  `;
+
+  goTo('results');
+  renderCatGrid(catScores);
+  await getAI(catScores, overall, risk.label);
+}
+
+function renderCatGrid(catScores) {
+  const grid = document.getElementById('cat-grid');
+  if (!grid) return;
+  Object.entries(catScores).forEach(([cat, score]) => {
+    const c = catInfo(score);
+    const card = document.createElement('div');
+    card.className = 'cat-card';
+    card.innerHTML = `
+      <div class="cat-name">${cat}</div>
+      <div class="cat-track"><div class="cat-fill" style="width:0%;background:${c.color}" id="bar-${cat.replace(/\W/g,'_')}"></div></div>
+      <div class="cat-row">
+        <span class="cat-score" style="color:${c.color}">${score}</span>
+        <span class="cat-status" style="color:${c.color}">${c.status}</span>
+      </div>`;
+    grid.appendChild(card);
+    setTimeout(() => {
+      const b = document.getElementById('bar-'+cat.replace(/\W/g,'_'));
+      if (b) b.style.width = score+'%';
+    }, 100);
+  });
+}
+
+async function getAI(catScores, overall, riskLabel) {
+  const breakdown = Object.entries(catScores).map(([k,v])=>`${k}: ${v}/100`).join(', ');
+  const prompt = `You are a cybersecurity analyst writing a concise risk briefing for ${bizInfo.contact}, ${bizInfo.role||'owner'} of ${bizInfo.name}, a ${bizInfo.size}-employee ${bizInfo.industry} business.
+
+Their cyber risk scores (0=safe, 100=critical): ${breakdown}. Overall: ${overall}/100 (${riskLabel}).
+
+Write TWO clear paragraphs:
+1. Plain-English summary of the most serious threats based on their specific scores and industry
+2. The most important immediate steps they should take
+
+Then provide exactly 5 specific actionable recommendations as a JSON array at the END:
+[{"priority":"CRITICAL","text":"..."},{"priority":"HIGH","text":"..."},...]
+
+Priorities: CRITICAL (score>65), HIGH (45-65), MEDIUM (<45). Be specific to their industry and business size.`;
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:1000,
+        messages:[{role:"user",content:prompt}]
+      })
+    });
+    const data = await res.json();
+    const text = data.content[0].text;
+    const jsonMatch = text.match(/\[[\s\S]*\]/);
+    if (jsonMatch) { try { aiRecs = JSON.parse(jsonMatch[0]); } catch(e){} }
+    aiAnalysis = text.replace(/\[[\s\S]*\]/,'').trim();
+
+    const paras = aiAnalysis.split(/\n\n+/).filter(p=>p.trim());
+    const body = document.getElementById('ai-body');
+    if (body) body.innerHTML = paras.map(p=>`<p>${p.trim()}</p>`).join('');
+
+    const recsList = document.getElementById('recs-list');
+    if (recsList && aiRecs.length > 0) {
+      recsList.innerHTML = aiRecs.map(r=>`
+        <div class="rec">
+          <div class="rec-dot ${r.priority}"></div>
+          <div>
+            <div class="rec-pri ${r.priority}">${r.priority}</div>
+            <div class="rec-text">${r.text}</div>
+          </div>
+        </div>`).join('');
+    }
+  } catch(e) {
+    const body = document.getElementById('ai-body');
+    if (body) body.innerHTML = '<p>AI analysis unavailable. Review your category scores above to identify the highest-risk areas.</p>';
+  }
+}
+
+/* ════ PDF EXPORT ════ */
+function downloadPDF() {
+  if (!window.jspdf) { alert('PDF library loading, please try again in a moment.'); return; }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
+  const { catScores, overall } = lastScores;
+  const risk = riskInfo(overall);
+  const date = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const W = 210, margin = 16;
+
+  const hexToRgb = hex => {
+    const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return r ? [parseInt(r[1],16),parseInt(r[2],16),parseInt(r[3],16)] : [100,100,100];
+  };
+  const riskColors = { critical:'#ff2828', high:'#e86400', medium:'#f0a500', low:'#00c47a' };
+  const rc = hexToRgb(riskColors[risk.cls]);
+
+  /* BG */
+  doc.setFillColor(10,22,40); doc.rect(0,0,W,297,'F');
+
+  /* Header band */
+  doc.setFillColor(15,32,64); doc.rect(0,0,W,44,'F');
+  doc.setFillColor(...hexToRgb('#1e6fc4')); doc.rect(0,42,W,2,'F');
+
+  /* Shield icon (simple) */
+  doc.setFillColor(...hexToRgb('#1e6fc4'));
+  doc.setDrawColor(...hexToRgb('#4aa8ff'));
+  doc.setLineWidth(0.5);
+
+  /* Brand */
+  doc.setTextColor(232,242,255);
+  doc.setFontSize(20); doc.setFont('helvetica','bold');
+  doc.text('RiskHarbor', margin+2, 18);
+  doc.setTextColor(122,159,192);
+  doc.setFontSize(8); doc.setFont('helvetica','normal');
+  doc.text('CYBER RISK ASSESSMENT REPORT', margin+2, 25);
+  doc.setFontSize(8);
+  doc.text(`Generated: ${date}`, W-margin, 18, {align:'right'});
+  doc.text(`Confidential — ${bizInfo.name}`, W-margin, 25, {align:'right'});
+
+  /* Business info bar */
+  doc.setFillColor(18,32,53); doc.roundedRect(margin, 32, W-margin*2, 8, 2, 2, 'F');
+  doc.setTextColor(122,159,192); doc.setFontSize(7.5);
+  doc.text(`${bizInfo.name}  ·  ${bizInfo.industry}  ·  ${bizInfo.size} employees  ·  ${bizInfo.contact}${bizInfo.role?', '+bizInfo.role:''}  ·  ${bizInfo.email}`, margin+4, 37.5);
+
+  let y = 52;
+
+  /* Risk score hero */
+  doc.setFillColor(...rc, 15);
+  doc.setDrawColor(...rc);
+  doc.setLineWidth(0.5);
+  doc.roundedRect(margin, y, W-margin*2, 28, 3, 3, 'FD');
+  doc.setTextColor(...rc);
+  doc.setFontSize(7); doc.setFont('helvetica','bold');
+  doc.text('OVERALL RISK SCORE', W/2, y+7, {align:'center'});
+  doc.setFontSize(26);
+  doc.text(`${overall}  —  ${risk.label}`, W/2, y+20, {align:'center'});
+  doc.setTextColor(122,159,192); doc.setFontSize(7.5); doc.setFont('helvetica','normal');
+  doc.text(risk.desc, W/2, y+26, {align:'center'});
+  y += 34;
+
+  /* Category scores */
+  doc.setTextColor(168,212,240); doc.setFontSize(9); doc.setFont('helvetica','bold');
+  doc.text('CATEGORY RISK BREAKDOWN', margin, y); y += 4;
+  doc.setDrawColor(30,58,95); doc.setLineWidth(0.3); doc.line(margin,y,W-margin,y); y += 4;
+
+  const colW = (W - margin*2 - 8) / 2;
+  let col = 0, rowY = y;
+  Object.entries(catScores).forEach(([cat, score]) => {
+    const xOff = col * (colW + 8);
+    const cInfo = score>=70?'#ff2828':score>=45?'#e86400':score>=20?'#f0a500':'#00c47a';
+    const rgb = hexToRgb(cInfo);
+    doc.setTextColor(74,106,136); doc.setFontSize(7); doc.setFont('helvetica','normal');
+    doc.text(cat.toUpperCase(), margin+xOff, rowY);
+    doc.setTextColor(...rgb); doc.setFontSize(8); doc.setFont('helvetica','bold');
+    doc.text(`${score}`, margin+xOff+colW, rowY, {align:'right'});
+    doc.setFillColor(20,35,55); doc.roundedRect(margin+xOff, rowY+1.5, colW, 3, 1, 1, 'F');
+    doc.setFillColor(...rgb); doc.roundedRect(margin+xOff, rowY+1.5, colW*(score/100), 3, 1, 1, 'F');
+    col++;
+    if (col === 2) { col = 0; rowY += 12; }
+  });
+  y = rowY + (col===0?0:12) + 4;
+
+  doc.setDrawColor(30,58,95); doc.line(margin,y,W-margin,y); y += 6;
+
+  /* AI Analysis */
+  if (aiAnalysis) {
+    doc.setTextColor(168,212,240); doc.setFontSize(9); doc.setFont('helvetica','bold');
+    doc.text('AI THREAT ANALYSIS', margin, y); y += 4;
+    doc.setTextColor(122,159,192); doc.setFontSize(7.5); doc.setFont('helvetica','normal');
+    const cleanText = aiAnalysis.replace(/\n\n/g,' ').replace(/\n/g,' ');
+    const lines = doc.splitTextToSize(cleanText, W-margin*2);
+    lines.slice(0,16).forEach(line => { doc.text(line, margin, y); y += 4; });
+    y += 2;
+    doc.setDrawColor(30,58,95); doc.line(margin,y,W-margin,y); y += 6;
+  }
+
+  /* Recommendations */
+  if (aiRecs.length > 0) {
+    doc.setTextColor(168,212,240); doc.setFontSize(9); doc.setFont('helvetica','bold');
+    doc.text('PRIORITY ACTION PLAN', margin, y); y += 4;
+    aiRecs.forEach(r => {
+      const rgb = hexToRgb(r.priority==='CRITICAL'?'#ff2828':r.priority==='HIGH'?'#e86400':'#f0a500');
+      doc.setFillColor(...rgb); doc.circle(margin+2.5, y-1.5, 1.5, 'F');
+      doc.setTextColor(...rgb); doc.setFontSize(7); doc.setFont('helvetica','bold');
+      doc.text(r.priority, margin+6, y);
+      doc.setTextColor(122,159,192); doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
+      const rlines = doc.splitTextToSize(r.text, W-margin*2-20);
+      rlines.forEach((line,i) => { doc.text(line, i===0?margin+22:margin+6, y); y += 4; });
+      y += 1;
+    });
+  }
+
+  /* Footer */
+  doc.setFillColor(10,22,40); doc.rect(0,280,W,17,'F');
+  doc.setDrawColor(30,58,95); doc.setLineWidth(0.3); doc.line(0,280,W,280);
+  doc.setTextColor(50,80,110); doc.setFontSize(6.5); doc.setFont('helvetica','normal');
+  doc.text('CONFIDENTIAL — FOR INTERNAL USE ONLY', W/2, 287, {align:'center'});
+  doc.text('RiskHarbor by Orcannus Technologies  ·  riskharbor.com  ·  This report is for informational purposes only and does not constitute professional cybersecurity advice.', W/2, 292, {align:'center'});
+
+  doc.save(`RiskHarbor-Report-${bizInfo.name.replace(/\s/g,'-')}-${date.replace(/,?\s/g,'-')}.pdf`);
+}
+
+</script>
+</body>
+</html>
