@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RiskHarbor – Thank You | Orcannus Technologies</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#080c10;--card:#111820;--border:#1e2d3d;--accent:#00c8ff;--accent2:#0077ff;--text:#c9d1d9;--muted:#586069;--heading:#e6edf3;}
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;font-weight:300;min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,200,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+  .container{max-width:860px;margin:0 auto;padding:0 24px;position:relative;z-index:1;flex:1;display:flex;flex-direction:column;}
+  header{padding:28px 0 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  .logo{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:1.3rem;letter-spacing:0.12em;color:var(--accent);text-transform:uppercase;}
+  .logo span{color:var(--heading);}
+  .badge{font-family:'Share Tech Mono',monospace;font-size:0.7rem;background:rgba(0,200,255,0.08);border:1px solid rgba(0,200,255,0.2);color:var(--accent);padding:4px 10px;letter-spacing:0.1em;}
+  .main{flex:1;display:flex;align-items:center;justify-content:center;padding:60px 0;}
+  .card{background:var(--card);border:1px solid var(--border);padding:52px 48px;text-align:center;max-width:560px;width:100%;}
+  .icon{font-size:3.2rem;margin-bottom:24px;display:block;}
+  .status-label{font-family:'Share Tech Mono',monospace;font-size:0.72rem;letter-spacing:0.25em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:10px;}
+  .status-label::before,.status-label::after{content:'';display:block;width:30px;height:1px;opacity:0.4;}
+  h1{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:clamp(1.8rem,4vw,2.8rem);color:var(--heading);letter-spacing:0.04em;line-height:1.1;margin-bottom:16px;}
+  h1 em{font-style:normal;color:var(--accent);}
+  p{font-size:0.95rem;color:var(--muted);line-height:1.75;margin-bottom:10px;max-width:420px;margin-left:auto;margin-right:auto;}
+  .divider{border:none;border-top:1px solid var(--border);margin:32px 0;}
+  .btn-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:8px;}
+  .btn{font-family:'Share Tech Mono',monospace;font-size:0.78rem;letter-spacing:0.12em;padding:12px 26px;text-decoration:none;display:inline-block;transition:background 0.2s,border-color 0.2s;cursor:pointer;border:none;}
+  .btn-primary{background:var(--accent2);color:#fff;}
+  .btn-primary:hover{filter:brightness(1.15);}
+  .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text);}
+  .btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+  .meta{font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:0.08em;margin-top:28px;}
+  footer{border-top:1px solid var(--border);padding:22px 0;text-align:center;font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:0.08em;position:relative;z-index:1;}
+  footer a{color:var(--accent);text-decoration:none;}
+  @keyframes scanline{0%{top:-5%}100%{top:105%}}
+  .scanline{position:fixed;left:0;width:100%;height:2px;background:linear-gradient(transparent,rgba(0,200,255,0.04),transparent);pointer-events:none;animation:scanline 8s linear infinite;z-index:9999;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  .card{animation:fadeUp 0.5s ease both;}
+
+  .card{border-color:#0077ff;background:linear-gradient(160deg,#0d1d30 0%,var(--card) 60%);}
+  .status-label{color:#00c8ff;}
+  .status-label::before,.status-label::after{background:#00c8ff;}
+  .check-ring{display:inline-flex;align-items:center;justify-content:center;width:72px;height:72px;border-radius:50%;border:2px solid #00c8ff;background:rgba(0,200,255,0.06);margin-bottom:22px;font-size:2rem;box-shadow:0 0 24px rgba(0,200,255,0.15);}
+  .tx-box{background:rgba(0,0,0,0.3);border:1px solid var(--border);padding:14px 18px;margin-top:22px;text-align:left;}
+  .tx-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;}
+  .tx-label{font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:0.1em;}
+  .tx-value{font-family:'Share Tech Mono',monospace;font-size:0.68rem;color:var(--heading);}
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+<div class="container">
+  <header>
+    <div class="logo"><span>ORCANNUS</span> TECHNOLOGIES</div>
+    <div class="badge">RISKHARBOR // SUBSCRIPTION CONFIRMED</div>
+  </header>
+  <div class="main">
+    <div class="card">
+      <div class="check-ring">✓</div>
+      <div class="status-label">Payment Successful</div>
+      <h1>Thank You for<br>Your <em>Purchase</em></h1>
+      <p>Your payment has been processed and your license is now active. A confirmation has been sent to your PayPal email address.</p>
+      <p>If you need your license key or have any questions, contact us at <strong style="color:var(--heading)">rsweatland@orcannus.com</strong>.</p>
+      <div class="tx-box">
+        <div class="tx-row">
+          <span class="tx-label">PRODUCT</span>
+          <span class="tx-value">Cyber Risk Assessment</span>
+        </div>
+        <div class="tx-row" style="border-top:1px solid var(--border);margin-top:6px;padding-top:10px;">
+          <span class="tx-label">STATUS</span>
+          <span class="tx-value" style="color:#00c8ff;">ACTIVE</span>
+        </div>
+        <div class="tx-row">
+          <span class="tx-label">SUPPORT</span>
+          <span class="tx-value">rsweatland@orcannus.com</span>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="btn-row">
+        <a href="https://orcannus.github.io/riskharbor/index.html" class="btn btn-primary">LAUNCH RiskHarbor</a>
+        <a href="mailto:rsweatland@orcannus.com" class="btn btn-outline">CONTACT SUPPORT</a>
+      </div>
+      <div class="meta">&copy; 2026 ORCANNUS TECHNOLOGIES — ALL RIGHTS RESERVED</div>
+    </div>
+  </div>
+  <footer>
+    &copy; 2026 ORCANNUS TECHNOLOGIES &nbsp;|&nbsp;
+    <a href="mailto:rsweatland@orcannus.com">rsweatland@orcannus.com</a>
+  </footer>
+</div>
+</body>
+</html>
